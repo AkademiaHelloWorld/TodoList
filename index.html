@@ -10,20 +10,11 @@
         <main>
             <h1 id="title">ToDo List</h1>
             <div id="inputContainer">
-                <input type="text" id="todoInput" placeholder="Dodaj zadanie..." onkeyup="changeInput()">
-                <button id="inputButton">+</button>
+                <input type="text" id="todoInput" placeholder="Dodaj zadanie..." onkeyup="changeInput(event)">
+                <button id="inputButton" onclick="addTodo()">+</button>
             </div>
             <div id="todoListContainer">
-                <div class="todoContainer">
-                    <button class="todoButton">x</button>
-                    <input type="checkbox" class="todoCheckbox">
-                    <label class="todoLabel">Przykładowe zadanie</label>
-                </div>
-                <div class="todoContainer">
-                    <button class="todoButton">x</button>
-                    <input type="checkbox" class="todoCheckbox">
-                    <label class="todoLabel">Drugie przykładowe zadanie</label>
-                </div>
+                
             </div>
         </main>
     </body>
