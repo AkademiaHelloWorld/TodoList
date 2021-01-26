@@ -1,3 +1,26 @@
+window.onload = function () {
+    const todos = JSON.parse(localStorage.getItem("todos") || "[]");
+    const todoListContainer = document.getElementById("todoListContainer");
+
+    for (let i = 0; i < todos.length; i++) {
+        const id = todos[i].id;
+        const todo = todos[i].todo;
+        let labelClasses;
+        if(todos[i].done) {
+            labelClasses = 'todoLabel todoLabelCrossed';
+        } else {
+            labelClasses = 'todoLabel';
+        }
+
+        todoListContainer.innerHTML +=
+            `<div class="todoContainer" id="todoContainer${id}">
+                <button class="todoButton" id="todoButton${id}" onclick="deleteTodo(${id})">x</button>
+                <input type="checkbox" class="todoCheckbox" id="todoCheckbox${id}" onchange="changeCheckbox(${id})">
+                <label class="${labelClasses}" id="todoLabel${id}">${todo}</label>
+            </div>`
+    }
+}
+
 function changeInput(event) {
     const todoInput = document.getElementById("todoInput");
     const todoButton = document.getElementById("inputButton");
@@ -19,15 +42,14 @@ function addTodo() {
     const todoContainers = document.getElementsByClassName("todoContainer");
     const inputButton = document.getElementById("inputButton");
 
-    todoListContainer.innerHTML += 
+    todoListContainer.innerHTML +=
         `<div class="todoContainer" id="todoContainer${todoContainers.length + 1}">
             <button class="todoButton" id="todoButton${todoContainers.length + 1}" onclick="deleteTodo(${todoContainers.length + 1})">x</button>
             <input type="checkbox" class="todoCheckbox" id="todoCheckbox${todoContainers.length + 1}" onchange="changeCheckbox(${todoContainers.length + 1})">
             <label class="todoLabel" id="todoLabel${todoContainers.length + 1}">${todoInput.value}</label>
         </div>`
 
-    todoInput.value = '';
-    inputButton.style.display = "none";
+
 
     // todos = [
     //     {id: 1, todo: "Jakies zadanie", done: true},
@@ -37,15 +59,35 @@ function addTodo() {
     // ]
 
     const todos = JSON.parse(localStorage.getItem("todos") || "[]");
+    let currentIndex;
 
-    todos.push({id: 1, todo: "Jakis tekst", done: false});
+    if (todos.length === 0) {
+        currentIndex = 0;
+    } else {
+        currentIndex = todos[todos.length - 1].id;
+    }
+
+    todos.push({ id: currentIndex + 1, todo: todoInput.value, done: false });
 
     localStorage.setItem("todos", JSON.stringify(todos));
+
+    todoInput.value = '';
+    inputButton.style.display = "none";
 }
 
 function deleteTodo(id) {
     const container = document.getElementById(`todoContainer${id}`);
     container.remove();
+
+    const todos = JSON.parse(localStorage.getItem("todos"));
+
+    for (let i = 0; i < todos.length; i++) {
+        if (todos[i].id === id) {
+            todos.splice(i, 1);
+        }
+    }
+
+    localStorage.setItem("todos", JSON.stringify(todos));
 }
 
 function changeCheckbox(id) {
@@ -57,4 +99,18 @@ function changeCheckbox(id) {
     } else {
         label.classList.remove("todoLabelCrossed");
     }
+
+    const todos = JSON.parse(localStorage.getItem("todos"));
+
+    for (let i = 0; i < todos.length; i++) {
+        if(todos[i].id === id) {
+            if(todos[i].done === true) {
+                todos[i].done = false;
+            } else {
+                todos[i].done = true;
+            }
+        }
+    }
+
+    localStorage.setItem("todos", JSON.stringify(todos));
 }
